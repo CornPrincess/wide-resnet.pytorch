@@ -52,8 +52,8 @@ sys.stdout.write("| ")
 trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform_train)
 testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=False, transform=transform_test)
 num_classes = 10
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
-testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=4)
+testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=4)
 
 # Default network & file name
 net = Wide_ResNet(args.depth, args.widen_factor, args.dropout, num_classes)
