@@ -21,11 +21,9 @@ from torch.autograd import Variable
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR-10 Training')
 parser.add_argument('--lr', default=0.1, type=float, help='learning_rate')
-parser.add_argument('--net_type', default='wide-resnet', type=str, help='model')
 parser.add_argument('--depth', default=28, type=int, help='depth of model')
 parser.add_argument('--widen_factor', default=10, type=int, help='width of model')
 parser.add_argument('--dropout', default=0.3, type=float, help='dropout_rate')
-parser.add_argument('--dataset', default='cifar10', type=str, help='dataset = [cifar10/cifar100]')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 parser.add_argument('--testOnly', '-t', action='store_true', help='Test mode with the saved model')
 args = parser.parse_args()
@@ -49,47 +47,23 @@ transform_test = transforms.Compose([
     transforms.Normalize(cf.mean[args.dataset], cf.std[args.dataset]),
 ])
 
-if(args.dataset == 'cifar10'):
-    print("| Preparing CIFAR-10 dataset...")
-    sys.stdout.write("| ")
-    trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform_train)
-    testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=False, transform=transform_test)
-    num_classes = 10
-elif(args.dataset == 'cifar100'):
-    print("| Preparing CIFAR-100 dataset...")
-    sys.stdout.write("| ")
-    trainset = torchvision.datasets.CIFAR100(root='./data', train=True, download=True, transform=transform_train)
-    testset = torchvision.datasets.CIFAR100(root='./data', train=False, download=False, transform=transform_test)
-    num_classes = 100
-
+print("| Preparing CIFAR-10 dataset...")
+sys.stdout.write("| ")
+trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform_train)
+testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=False, transform=transform_test)
+num_classes = 10
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
 testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
 
-# Return network & file name
-def getNetwork(args):
-    if (args.net_type == 'lenet'):
-        net = LeNet(num_classes)
-        file_name = 'lenet'
-    elif (args.net_type == 'vggnet'):
-        net = VGG(args.depth, num_classes)
-        file_name = 'vgg-'+str(args.depth)
-    elif (args.net_type == 'resnet'):
-        net = ResNet(args.depth, num_classes)
-        file_name = 'resnet-'+str(args.depth)
-    elif (args.net_type == 'wide-resnet'):
-        net = Wide_ResNet(args.depth, args.widen_factor, args.dropout, num_classes)
-        file_name = 'wide-resnet-'+str(args.depth)+'x'+str(args.widen_factor)
-    else:
-        print('Error : Network should be either [LeNet / VGGNet / ResNet / Wide_ResNet')
-        sys.exit(0)
-
-    return net, file_name
+# Default network & file name
+net = Wide_ResNet(args.depth, args.widen_factor, args.dropout, num_classes)
+file_name = 'wide-resnet-'+str(args.depth)+'x'+str(args.widen_factor)
 
 # Test only option
 if (args.testOnly):
     print('\n[Test Phase] : Model setup')
     assert os.path.isdir('checkpoint'), 'Error: No checkpoint directory found!'
-    _, file_name = getNetwork(args)
+    _, file_name = net, file_name
     checkpoint = torch.load('./checkpoint/'+args.dataset+os.sep+file_name+'.t7')
     net = checkpoint['net']
 
@@ -124,14 +98,14 @@ if args.resume:
     # Load checkpoint
     print('| Resuming from checkpoint...')
     assert os.path.isdir('checkpoint'), 'Error: No checkpoint directory found!'
-    _, file_name = getNetwork(args)
+    _, file_name = net, file_name
     checkpoint = torch.load('./checkpoint/'+args.dataset+os.sep+file_name+'.t7')
     net = checkpoint['net']
     best_acc = checkpoint['acc']
     start_epoch = checkpoint['epoch']
 else:
     print('| Building net type [' + args.net_type + ']...')
-    net, file_name = getNetwork(args)
+    net, file_name = net, file_name
     net.apply(conv_init)
 
 if use_cuda:
