@@ -39,12 +39,12 @@ transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4),
     transforms.RandomHorizontalFlip(),
     transforms.ToTensor(),
-    transforms.Normalize(cf.mean[args.dataset], cf.std[args.dataset]),
+    transforms.Normalize(cf.mean['cifar10'], cf.std['cifar10']),
 ]) # meanstd transformation
 
 transform_test = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Normalize(cf.mean[args.dataset], cf.std[args.dataset]),
+    transforms.Normalize(cf.mean['cifar10'], cf.std['cifar10']),
 ])
 
 print("| Preparing CIFAR-10 dataset...")
@@ -64,7 +64,7 @@ if (args.testOnly):
     print('\n[Test Phase] : Model setup')
     assert os.path.isdir('checkpoint'), 'Error: No checkpoint directory found!'
     _, file_name = net, file_name
-    checkpoint = torch.load('./checkpoint/'+args.dataset+os.sep+file_name+'.t7')
+    checkpoint = torch.load('./checkpoint/cifar10'+os.sep+file_name+'.t7')
     net = checkpoint['net']
 
     if use_cuda:
@@ -99,7 +99,7 @@ if args.resume:
     print('| Resuming from checkpoint...')
     assert os.path.isdir('checkpoint'), 'Error: No checkpoint directory found!'
     _, file_name = net, file_name
-    checkpoint = torch.load('./checkpoint/'+args.dataset+os.sep+file_name+'.t7')
+    checkpoint = torch.load('./checkpoint/cifar10'+os.sep+file_name+'.t7')
     net = checkpoint['net']
     best_acc = checkpoint['acc']
     start_epoch = checkpoint['epoch']
@@ -176,7 +176,7 @@ def test(epoch):
         }
         if not os.path.isdir('checkpoint'):
             os.mkdir('checkpoint')
-        save_point = './checkpoint/'+args.dataset+os.sep
+        save_point = './checkpoint/cifar10'+os.sep
         if not os.path.isdir(save_point):
             os.mkdir(save_point)
         torch.save(state, save_point+file_name+'.t7')
