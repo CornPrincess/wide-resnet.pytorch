@@ -1,10 +1,4 @@
-<p align="center"><img width="40%" src="./imgs/pytorch.png"></p>
-
-Best CIFAR-10, CIFAR-100 results with wide-residual networks using PyTorch
-
-Pytorch Implementation of Sergey Zagoruyko's [Wide Residual Networks](https://arxiv.org/pdf/1605.07146v2.pdf)
-
-For Torch implementations, see [here](https://github.com/meliketoy/wide-residual-network).
+COMP5434 Big Data Computing
 
 ## Requirements
 See the [installation instruction](INSTALL.md) for a step-by-step installation guide.
@@ -21,7 +15,7 @@ git clone https://github.com/meliketoy/wide-resnet.pytorch
 ## How to run
 After you have cloned the repository, you can train each dataset of either cifar10, cifar100 by running the script below.
 ```bash
-python main --lr 0.1 resume false --net_type [lenet/vggnet/resnet/wide-resnet] --depth 28 --widen_factor 10 --dropout_rate 0.3 --dataset [cifar10/cifar100] 
+python main --lr 0.1 resume false --net_type [lenet/vggnet/resnet/wide-resnet] --depth 28 --widen_factor 10 --dropout_rate 0.3 --dataset [cifar10/cifar100]
 ```
 
 ## Implementation Details
@@ -34,7 +28,7 @@ python main --lr 0.1 resume false --net_type [lenet/vggnet/resnet/wide-resnet] -
 | 161 ~ 200 |     0.0008    |     0.0005    | Momentum  |    0.9   |   true   |
 
 ## CIFAR-10 Results
- 
+
 ![alt tag](imgs/cifar10_image.png)
 
 Below is the result of the test set accuracy for **CIFAR-10 dataset** training.
