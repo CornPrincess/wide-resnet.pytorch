@@ -106,7 +106,7 @@ if args.resume:
     best_acc = checkpoint['acc']
     start_epoch = checkpoint['epoch']
 else:
-    print('| Building net type [' + args.net_type + ']...')
+    print('| Building net type [Wide ResNet]...')
     net, file_name = net, file_name
     net.apply(conv_init)
 
