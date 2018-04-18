@@ -92,9 +92,9 @@ if (args.testOnly):
     acc = 100.*correct/total
     print("| Test Result\tAcc@1: %.2f%%" %(acc))
 
-    rmse = torch.sqrt(torch.mean((targets.data - predicted).pow(2)))
+    #rmse = torch.sqrt(torch.mean((targets.data - predicted).pow(2)))
     cm = confusion_matrix(y_true=targets.data, y_pred=predicted)
-    print("| RMSE:\n", rmse)
+    #print("| RMSE:\n", rmse)
     print("| Confusion Matrix:\n", cm)
 
     sys.exit(0)
@@ -120,7 +120,7 @@ if use_cuda:
     net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))
     cudnn.benchmark = True
 
-criterion = nn.CrossEntropyLoss()
+targets = nn.CrossEntropyLoss()
 
 # Training
 def train(epoch):
@@ -158,11 +158,10 @@ def test(epoch):
     test_loss = 0
     correct = 0
     total = 0
-    for batch_idx, (inputs, targets) in enumerate(testloader):
+    for batch_idx, (inputs, global targets) in enumerate(testloader):
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
         inputs = Variable(inputs, volatile=True)
-        global targets
         targets = Variable(targets)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
@@ -171,9 +170,7 @@ def test(epoch):
         global _, predicted
         _, predicted = torch.max(outputs.data, 1)
         total += targets.size(0)
-        #rmse = torch.sqrt(torch.mean((torch.max(targets.data, 1) - predicted).pow(2)))
         correct += predicted.eq(targets.data).cpu().sum()
-        #print(rmse)
     # Save checkpoint when best model
     acc = 100.*correct/total
     print("\n| Validation Epoch #%d\t\t\tLoss: %.4f Acc@1: %.2f%%" %(epoch, loss.data[0], acc))
@@ -210,7 +207,7 @@ for epoch in range(start_epoch, start_epoch+num_epochs):
 
 print('\n[Phase 4] : Testing model')
 print('* Test results : Acc@1 = %.2f%%' %(best_acc))
-rmse = torch.sqrt(torch.mean((targets.data - predicted).pow(2)))
+#rmse = torch.sqrt(torch.mean((targets.data - predicted).pow(2)))
 cm = confusion_matrix(y_true=targets.data, y_pred=predicted)
-print("RMSE:\n", rmse)
+#print("RMSE:\n", rmse)
 print("Confusion Matrix:\n", cm)
