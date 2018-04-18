@@ -162,12 +162,14 @@ def test(epoch):
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
         inputs = Variable(inputs, volatile=True)
-        global targets = Variable(targets)
+        global targets
+        targets = Variable(targets)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
 
         test_loss += loss.data[0]
-        global _, predicted = torch.max(outputs.data, 1)
+        global _, predicted
+        _, predicted = torch.max(outputs.data, 1)
         total += targets.size(0)
         #rmse = torch.sqrt(torch.mean((torch.max(targets.data, 1) - predicted).pow(2)))
         correct += predicted.eq(targets.data).cpu().sum()
