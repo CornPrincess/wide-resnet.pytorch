@@ -15,9 +15,11 @@ import sys
 import time
 import argparse
 import datetime
+import numpy as np
 
 from networks import *
 from torch.autograd import Variable
+from sklearn.metrics import confusion_matrix
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR-10 Training')
 parser.add_argument('--lr', default=0.1, type=float, help='learning_rate')
@@ -162,10 +164,14 @@ def test(epoch):
         _, predicted = torch.max(outputs.data, 1)
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
-
+        print(outputs)
     # Save checkpoint when best model
     acc = 100.*correct/total
     print("\n| Validation Epoch #%d\t\t\tLoss: %.4f Acc@1: %.2f%%" %(epoch, loss.data[0], acc))
+
+    #RMSE =
+
+    #cm = confusion_matrix(y_true=np.argmax(targets, axis=1), y_pred=outputs)
 
     if acc > best_acc:
         print('| Saving Best model...\t\t\tTop1 = %.2f%%' %(acc))
