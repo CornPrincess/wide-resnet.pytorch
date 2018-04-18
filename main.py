@@ -131,13 +131,13 @@ def train(epoch):
     optimizer = optim.SGD(net.parameters(), lr=cf.learning_rate(args.lr, epoch), momentum=0.9, weight_decay=5e-4)
 
     print('\n=> Training Epoch #%d, LR=%.4f' %(epoch, cf.learning_rate(args.lr, epoch)))
-    for batch_idx, (inputs, train_targets) in enumerate(trainloader):
+    for batch_idx, (inputs, targets) in enumerate(trainloader):
         if use_cuda:
-            inputs, train_targets = inputs.cuda(), train_targets.cuda() # GPU settings
+            inputs, targets = inputs.cuda(), targets.cuda() # GPU settings
         optimizer.zero_grad()
-        inputs, train_targets = Variable(inputs), Variable(train_targets)
+        inputs, targets = Variable(inputs), Variable(targets)
         outputs = net(inputs)               # Forward Propagation
-        loss = criterion(outputs, train_targets)  # Loss
+        loss = criterion(outputs, targets)  # Loss
         loss.backward()  # Backward Propagation
         optimizer.step() # Optimizer update
 
