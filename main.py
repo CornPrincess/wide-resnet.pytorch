@@ -120,8 +120,6 @@ if use_cuda:
     net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))
     cudnn.benchmark = True
 
-targets = nn.CrossEntropyLoss()
-
 criterion = nn.CrossEntropyLoss()
 
 # Training
