@@ -122,6 +122,8 @@ if use_cuda:
 
 targets = nn.CrossEntropyLoss()
 
+criterion = nn.CrossEntropyLoss()
+
 # Training
 def train(epoch):
     net.train()
