@@ -163,13 +163,16 @@ def test(epoch):
         test_loss += loss.data[0]
         _, predicted = torch.max(outputs.data, 1)
         total += targets.size(0)
-        cm = confusion_matrix(y_true=torch.max(targets.data, 1), y_pred=predicted)
+        cm = confusion_matrix(y_true=targets.data, y_pred=predicted)
+        rmse = torch.sqrt(torch.mean((targets.data - predicted).pow(2)))
         correct += predicted.eq(targets.data).cpu().sum()
+        print(rmse)
         print(cm)
     # Save checkpoint when best model
     acc = 100.*correct/total
     print("\n| Validation Epoch #%d\t\t\tLoss: %.4f Acc@1: %.2f%%" %(epoch, loss.data[0], acc))
-
+    print("targets:", targets)
+    print("outputs:", outputs)
     if acc > best_acc:
         print('| Saving Best model...\t\t\tTop1 = %.2f%%' %(acc))
         state = {
