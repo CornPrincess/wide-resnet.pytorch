@@ -92,8 +92,10 @@ if (args.testOnly):
     acc = 100.*correct/total
     print("| Test Result\tAcc@1: %.2f%%" %(acc))
 
+    rmse = torch.sqrt(torch.mean((targets.data - predicted).pow(2)))
     cm = confusion_matrix(y_true=targets.data, y_pred=predicted)
-    print("Confusion Matrix:\n", cm)
+    print("| RMSE:\n", rmse)
+    print("| Confusion Matrix:\n", cm)
 
     sys.exit(0)
 
@@ -159,12 +161,12 @@ def test(epoch):
     for batch_idx, (inputs, targets) in enumerate(testloader):
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
-        inputs, targets = Variable(inputs, volatile=True), Variable(targets)
+        global inputs, targets = Variable(inputs, volatile=True), Variable(targets)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
 
         test_loss += loss.data[0]
-        _, predicted = torch.max(outputs.data, 1)
+        global _, predicted = torch.max(outputs.data, 1)
         total += targets.size(0)
         #rmse = torch.sqrt(torch.mean((torch.max(targets.data, 1) - predicted).pow(2)))
         correct += predicted.eq(targets.data).cpu().sum()
@@ -205,6 +207,7 @@ for epoch in range(start_epoch, start_epoch+num_epochs):
 
 print('\n[Phase 4] : Testing model')
 print('* Test results : Acc@1 = %.2f%%' %(best_acc))
-#RMSE =
+rmse = torch.sqrt(torch.mean((targets.data - predicted).pow(2)))
 cm = confusion_matrix(y_true=targets.data, y_pred=predicted)
+print("RMSE:\n", rmse)
 print("Confusion Matrix:\n", cm)
