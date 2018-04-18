@@ -154,7 +154,7 @@ def train(epoch):
 
 def test(epoch):
     global best_acc
-    global targets
+    global cm
     net.eval()
     test_loss = 0
     correct = 0
@@ -167,13 +167,14 @@ def test(epoch):
         outputs = net(inputs)
         loss = criterion(outputs, targets)
         test_loss += loss.data[0]
-        global _, predicted
         _, predicted = torch.max(outputs.data, 1)
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
     # Save checkpoint when best model
     acc = 100.*correct/total
+
     print("\n| Validation Epoch #%d\t\t\tLoss: %.4f Acc@1: %.2f%%" %(epoch, loss.data[0], acc))
+    cm = confusion_matrix(y_true=targets.data, y_pred=predicted)
     if acc > best_acc:
         print('| Saving Best model...\t\t\tTop1 = %.2f%%' %(acc))
         state = {
@@ -208,6 +209,6 @@ for epoch in range(start_epoch, start_epoch+num_epochs):
 print('\n[Phase 4] : Testing model')
 print('* Test results : Acc@1 = %.2f%%' %(best_acc))
 #rmse = torch.sqrt(torch.mean((targets.data - predicted).pow(2)))
-cm = confusion_matrix(y_true=targets.data, y_pred=predicted)
+
 #print("RMSE:\n", rmse)
 print("Confusion Matrix:\n", cm)
