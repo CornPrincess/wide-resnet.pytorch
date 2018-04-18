@@ -161,12 +161,13 @@ def test(epoch):
     for batch_idx, (inputs, targets) in enumerate(testloader):
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
-        global inputs, global targets = Variable(inputs, volatile=True), Variable(targets)
+        inputs = Variable(inputs, volatile=True)
+        global targets = Variable(targets)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
 
         test_loss += loss.data[0]
-        global _, global predicted = torch.max(outputs.data, 1)
+        global _, predicted = torch.max(outputs.data, 1)
         total += targets.size(0)
         #rmse = torch.sqrt(torch.mean((torch.max(targets.data, 1) - predicted).pow(2)))
         correct += predicted.eq(targets.data).cpu().sum()
