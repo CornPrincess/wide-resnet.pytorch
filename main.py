@@ -154,18 +154,18 @@ def train(epoch):
 
 def test(epoch):
     global best_acc
+    global targets
     net.eval()
     test_loss = 0
     correct = 0
     total = 0
-    for batch_idx, (inputs, global targets) in enumerate(testloader):
+    for batch_idx, (inputs, targets) in enumerate(testloader):
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
         inputs = Variable(inputs, volatile=True)
         targets = Variable(targets)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
-
         test_loss += loss.data[0]
         global _, predicted
         _, predicted = torch.max(outputs.data, 1)
