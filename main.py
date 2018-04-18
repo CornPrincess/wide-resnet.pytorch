@@ -92,6 +92,9 @@ if (args.testOnly):
     acc = 100.*correct/total
     print("| Test Result\tAcc@1: %.2f%%" %(acc))
 
+    cm = confusion_matrix(y_true=targets.data, y_pred=predicted)
+    print("Confusion Matrix:\n", cm)
+
     sys.exit(0)
 
 # Model
