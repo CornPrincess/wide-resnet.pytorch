@@ -164,9 +164,9 @@ def test(epoch):
         _, predicted = torch.max(outputs.data, 1)
         total += targets.size(0)
         cm = confusion_matrix(y_true=targets.data, y_pred=predicted)
-        rmse = torch.sqrt(torch.mean((torch.max(targets.data, 1) - predicted).pow(2)))
+        #rmse = torch.sqrt(torch.mean((torch.max(targets.data, 1) - predicted).pow(2)))
         correct += predicted.eq(targets.data).cpu().sum()
-        print(rmse)
+        #print(rmse)
         print(cm)
     # Save checkpoint when best model
     acc = 100.*correct/total
