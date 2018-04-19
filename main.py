@@ -28,7 +28,7 @@ parser.add_argument('--widen_factor', default=10, type=int, help='width of model
 parser.add_argument('--dropout', default=0.3, type=float, help='dropout_rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 parser.add_argument('--testOnly', '-t', action='store_true', help='Test mode with the saved model')
-parser.add_argument('--image', type=str, action='store_true', help='Input an image')
+parser.add_argument('--image', help='Input an image')
 args = parser.parse_args()
 
 # Hyper Parameter settings
