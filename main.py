@@ -28,6 +28,7 @@ parser.add_argument('--widen_factor', default=10, type=int, help='width of model
 parser.add_argument('--dropout', default=0.3, type=float, help='dropout_rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 parser.add_argument('--testOnly', '-t', action='store_true', help='Test mode with the saved model')
+parser.add_argument('--image', type=str, action='store_true', help='Input an image')
 args = parser.parse_args()
 
 # Hyper Parameter settings
@@ -60,6 +61,32 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False,
 # Default network & file name
 net = Wide_ResNet(args.depth, args.widen_factor, args.dropout, num_classes)
 file_name = 'wide-resnet-'+str(args.depth)+'x'+str(args.widen_factor)
+
+# Input an image for testing
+if (args.image):
+    print('\n[Test Phase] : Model setup')
+    assert os.path.isdir('checkpoint'), 'Error: No checkpoint directory found!'
+    _, file_name = net, file_name
+    checkpoint = torch.load('./checkpoint/cifar10'+os.sep+file_name+'.t7')
+    net = checkpoint['net']
+
+    if use_cuda:
+        net.cuda()
+        net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))
+        cudnn.benchmark = True
+
+    net.eval()
+
+    if use_cuda:
+        inputs = scipy.ndimage.imread(args.image)
+    inputs = Variable(inputs, volatile=True)
+    outputs = net(inputs)
+
+    predicted = torch.max(outputs.data, 1)
+
+    print("| Test Result: ", predicted)
+
+    sys.exit(0)
 
 # Test only option
 if (args.testOnly):
