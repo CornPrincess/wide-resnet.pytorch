@@ -80,6 +80,7 @@ if (args.image):
 
     if use_cuda:
         inputs = scipy.ndimage.imread(args.image)
+    inputs = torch.from_numpy(inputs)
     inputs = Variable(inputs, volatile=True)
     outputs = net(inputs)
 
