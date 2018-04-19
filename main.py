@@ -82,7 +82,9 @@ if (args.image):
         inputs = scipy.ndimage.imread(args.image)
     inputs = torch.from_numpy(inputs).cuda()
     inputs = Variable(inputs, volatile=True)
+    print(inputs)
     outputs = net(inputs)
+    print(outputs)
 
     predicted = torch.max(outputs.data, 1)
 
@@ -112,7 +114,6 @@ if (args.testOnly):
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
         inputs, targets = Variable(inputs, volatile=True), Variable(targets)
-        print(inputs)
         outputs = net(inputs)
 
         _, predicted = torch.max(outputs.data, 1)
