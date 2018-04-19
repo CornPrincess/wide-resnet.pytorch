@@ -112,6 +112,7 @@ if (args.testOnly):
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
         inputs, targets = Variable(inputs, volatile=True), Variable(targets)
+        print(inputs)
         outputs = net(inputs)
 
         _, predicted = torch.max(outputs.data, 1)
