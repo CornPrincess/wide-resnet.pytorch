@@ -110,6 +110,7 @@ if (args.testOnly):
     test_loss = 0
     correct = 0
     total = 0
+    total_se = []
 
     for batch_idx, (inputs, targets) in enumerate(testloader):
         if use_cuda:
