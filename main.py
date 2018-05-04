@@ -61,7 +61,7 @@ trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuff
 testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=4)
 
 # Default network & file name
-net = Wide_ResNet(args.depth, args.widen_factor, args.dropout, num_classes)
+net = Wide_ResNet(args.depth, args.widen_factor, args.dropout, int(num_classes))
 file_name = 'wide-resnet-'+str(args.depth)+'x'+str(args.widen_factor)
 
 # Input an image for testing
